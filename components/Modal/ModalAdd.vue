@@ -4,7 +4,7 @@
       <v-btn
         large
         @click="openModal"
-        color="#0288D1"
+        class="primary"
       >
         Adicionar Jogador
       </v-btn>
@@ -17,7 +17,7 @@
             label="Nome"
             color="#ccc"
             v-model="nome"
-            @keypress="addJogador"
+            @keypress.enter="addJogador"
           ></v-text-field>
           <p v-if="showAlert" class="red--text">Insira um nome porra!</p>
           <v-btn
@@ -51,9 +51,13 @@ export default {
       this.showModal = true;
     },
     addJogador() {
-      //adiciona jogador na store
+      const newJogador = {
+        nome:this.nome,
+        pts:0
+      };
+
       if(this.nome !== '') {
-        this.$store.dispatch('addJogador', {nome:this.nome, pts:0});
+        this.$store.dispatch('addJogador', newJogador);
         this.showModal = false;
       } else {
         this.showAlert = true;
