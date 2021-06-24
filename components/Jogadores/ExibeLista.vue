@@ -5,8 +5,8 @@
         <v-card
           dark
           class="d-flex flex-column align-center pa-3 ma-2"
-          v-for="(jogador, index) in jogadores"
-          :key="index"
+          v-for="jogador in jogadores"
+          :key="jogador.id"
         >
           <div class="nome">
             <h1>{{ jogador.nome }}</h1>
@@ -14,7 +14,7 @@
               class="ml-2 red--text"
               icon
               small
-              @click="excluir(jogador)"
+              @click="excluir(jogador.id)"
             >
               <v-icon>mdi-close</v-icon>
             </v-btn>
@@ -43,23 +43,25 @@ export default {
     }
   },
   created() {
-    this.exibeLista;
+    this.exibeLista();
   },
   computed: {
-    exibeLista() {
-      this.jogadores = this.$store.getters.listaJogadores;
-    },
     exibeCard() {
       if(this.jogadores.length === 0) {
         return false;
       } else {
         return true;
       }
-    }
+    },
   },
   methods: {
-    excluir(jogador) {
-      this.$store.dispatch('excluir', jogador);
+    async exibeLista() {
+      await this.$store.dispatch('getJogadores');
+      this.jogadores = this.$store.getters.listaJogadores;
+    },
+    async excluir(id) {
+      await this.$store.dispatch('excluir', id);
+      this.exibeLista();
     },
     somaPts() {}
   }
