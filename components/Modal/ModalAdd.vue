@@ -1,37 +1,35 @@
 <template>
-  <v-row>
-    <v-col class="d-flex justify-center align-center">
-      <v-btn
-        large
-        @click="openModal"
-        class="primary"
-      >
-        Adicionar Jogador
-      </v-btn>
-      <v-dialog max-width="400" v-model="showModal">
-        <v-card class="d-flex flex-column align-center pa-5">
-          <v-card-title><h2>Quem vai jogar?</h2></v-card-title>
-          <v-text-field
-            autofocus
-            id="nome"
-            label="Nome"
-            color="#ccc"
-            v-model="nome"
-            @keypress.enter="addJogador"
-          ></v-text-field>
-          <p v-if="showAlert" class="red--text">Insira um nome porra!</p>
-          <v-btn
-            large
-            color="success"
-            class="black--text"
-            @click="addJogador"
-          >
-            Adicionar
-          </v-btn>
-        </v-card>
-      </v-dialog>
-    </v-col>
-  </v-row>
+  <v-col class="d-flex justify-center align-center">
+    <v-btn
+      large
+      @click="openModal"
+      class="primary"
+    >
+      Adicionar Jogador
+    </v-btn>
+    <v-dialog max-width="400" v-model="showModal">
+      <v-card light class="d-flex flex-column align-center pa-5">
+        <v-card-title><h2>Quem vai jogar?</h2></v-card-title>
+        <v-text-field
+          autofocus
+          id="nome"
+          label="Nome"
+          color="#888"
+          v-model="nome"
+          @keypress.enter="addJogador"
+        ></v-text-field>
+        <p v-if="showAlert" class="red--text">Insira um nome porra!</p>
+        <v-btn
+          large
+          color="success"
+          class="black--text"
+          @click="addJogador"
+        >
+          Adicionar
+        </v-btn>
+      </v-card>
+    </v-dialog>
+  </v-col>
 </template>
 
 <script>
@@ -54,11 +52,11 @@ export default {
       const newJogador = {
         nome:this.nome,
         pts:0,
-        rodadas: [{rodada: 0, pontos: 0}]
+        tabela: [{rodada: 'Rodadas', pontos: 'Pontos'}]
       };
 
       if(this.nome !== '') {
-        this.$store.dispatch('addJogador', newJogador);
+        this.$store.dispatch('jogadores/addJogador', newJogador);
         this.showModal = false;
       } else {
         this.showAlert = true;
