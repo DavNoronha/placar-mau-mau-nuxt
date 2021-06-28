@@ -53,7 +53,8 @@ export default {
     addJogador() {
       const newJogador = {
         nome:this.nome,
-        pts:0
+        pts:0,
+        rodadas: [{rodada: 0, pontos: 0}]
       };
 
       if(this.nome !== '') {

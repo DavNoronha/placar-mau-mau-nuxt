@@ -31,7 +31,8 @@ const createStore = () => {
           const jogador = {
             id: key,
             nome: responseData[key].nome,
-            pts: responseData[key].pts
+            pts: responseData[key].pts,
+            rodadas: responseData[key].rodadas
           }
           lista.push(jogador);
         }
