@@ -52,11 +52,16 @@ export default {
       const newJogador = {
         nome:this.nome,
         pts:0,
-        tabela: [{rodada: 'Rodadas', pontos: 'Pontos'}]
+        tabela: [
+          {
+            rodada: 0,
+            pontos: 0
+          }
+        ]
       };
 
       if(this.nome !== '') {
-        this.$store.dispatch('jogadores/addJogador', newJogador);
+        this.$store.dispatch('addJogador', newJogador);
         this.showModal = false;
       } else {
         this.showAlert = true;

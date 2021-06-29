@@ -14,11 +14,11 @@
         </thead>
         <tbody>
           <tr
-            v-for="(item, key, index) in jogador.tabela"
-            :key="index"
+            v-for="(item, key) in jogador.tabela"
+            :key="key"
           >
-            <td v-if="item.rodada !== 'Rodadas'">{{ item.rodada }}</td>
-            <td v-if="item.pontos !== 'Pontos'">{{ item.pontos }}</td>
+            <td>{{ item.rodada }}</td>
+            <td>{{ item.pontos }}</td>
           </tr>
         </tbody>
       </template>

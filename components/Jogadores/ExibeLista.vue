@@ -3,13 +3,12 @@
     <v-card
       dark
       class="d-flex flex-column pa-3 ma-2"
-      v-for="(jogador, index) in jogadores"
+      v-for="jogador in jogadores"
       :key="jogador.id"
     >
       <v-row class="d-flex">
         <CardJogador
-          :totalPts="pts"
-          :index="index"
+          :index="jogador.id"
           :jogador="jogador"
           @update="exibeLista"
         />
@@ -30,8 +29,7 @@ export default {
   },
   data() {
     return {
-      jogadores: [],
-      pts: null
+      jogadores: []
     }
   },
   created() {
@@ -44,13 +42,8 @@ export default {
   },
   methods: {
     async exibeLista() {
-      await this.$store.dispatch('jogadores/getJogadores');
-      this.jogadores = this.$store.getters['jogadores/listaJogadores'];
-    },
-    somaPts(i) {
-      this.jogadores[i].tabela.push({rodada: this.jogadores[i].tabela.length, pontos: this.pts});
-      this.jogadores[i].pts = this.jogadores[i].pts + this.pts;
-      this.pts = null;
+      await this.$store.dispatch('getJogadores');
+      this.jogadores = this.$store.getters['listaJogadores'];
     }
   }
 }

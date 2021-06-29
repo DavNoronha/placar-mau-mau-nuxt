@@ -32,7 +32,7 @@ export default {
   },
   methods: {
     async excluir(id) {
-      await this.$store.dispatch('jogadores/excluir', id);
+      await this.$store.dispatch('excluir', id);
       this.showModal = false;
       this.$emit('remover');
     },

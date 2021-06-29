@@ -9,13 +9,13 @@
       type="number"
       placeholder=""
       class="addPts"
-      v-model.lazy.number="totalPts"
-      @keypress.enter="somaPts(index)"
+      v-model.lazy.number="rodadaPts"
+      @keypress.enter="somaPts"
     >
     <v-btn
       rounded
       class="mt-3 success black--text"
-      @click="somaPts(index)"
+      @click="somaPts"
     >
       <v-icon>mdi-plus</v-icon>
     </v-btn>
@@ -26,13 +26,26 @@
 import ModalRemove from '@/components/Modal/ModalRemove.vue';
 
 export default {
-  props: ['jogador', 'index', 'totalPts'],
+  props: ['jogador', 'index'],
   components: {
     ModalRemove
+  },
+  data() {
+    return {
+      rodadaPts: null,
+      rodadas: this.jogador.tabela.length - 1
+    }
   },
   methods: {
     update() {
       this.$emit('update');
+    },
+    somaPts() {
+      this.rodadas++;
+      this.jogador.pts = this.jogador.pts + this.rodadaPts;
+      this.jogador.tabela.push({rodada: this.rodadas, pontos: this.rodadaPts});
+      this.$store.dispatch('addPts', this.jogador);
+      this.rodadaPts = null;
     }
   }
 }
