@@ -1,6 +1,6 @@
 <template>
   <v-row class="d-flex flex-column">
-    <v-col>
+    <v-col class="d-flex justify-center">
       <ExibeLista />
     </v-col>
   </v-row>
@@ -11,7 +11,7 @@ import ExibeLista from '@/components/Jogadores/ExibeLista.vue';
 
 export default {
   components: {
-    ExibeLista
+    ExibeLista,
   },
   data() {
     return {

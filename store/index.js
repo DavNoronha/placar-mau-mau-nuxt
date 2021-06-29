@@ -17,7 +17,7 @@ const createStore = () => {
       excluir(state, payload) {
         const res = state.jogadores.filter(j => j.id !== payload);
         state.jogadores = res;
-      }
+      },
     },
     actions: {
       async getJogadores(context) {
@@ -31,7 +31,8 @@ const createStore = () => {
           const jogador = {
             id: key,
             nome: responseData[key].nome,
-            pts: responseData[key].pts
+            pts: responseData[key].pts,
+            tabela: responseData[key].tabela
           }
           lista.push(jogador);
         }
@@ -56,6 +57,17 @@ const createStore = () => {
         const responseData = await response.json();
 
         context.commit('excluir', payload);
+      },
+      // pontos
+      async addPts(context, payload) {
+        const listaPts = [];
+
+        const response = await fetch(url+'/'+payload.id+'.json', {
+          method: 'PUT',
+          body: JSON.stringify(payload)
+        });
+
+        const responseData = await response.json();
       }
     },
     getters: {
