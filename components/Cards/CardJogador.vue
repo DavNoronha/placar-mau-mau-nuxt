@@ -4,12 +4,12 @@
       <h1>{{ jogador.nome }}</h1>
       <ModalRemove :jogador="jogador" @remover="update"/>
     </div>
-    <p>Total: {{ jogador.pts }}</p>
+    <p>Total: <strong>{{ jogador.pts }}</strong></p>
     <input
       type="number"
       placeholder=""
       class="addPts"
-      v-model.number="rodadaPts"
+      v-model.number="ptsFeitos"
       @keypress.enter="somaPts"
     >
     <v-btn
@@ -32,7 +32,7 @@ export default {
   },
   data() {
     return {
-      rodadaPts: null,
+      ptsFeitos: null,
       rodadas: this.jogador.tabela.length - 1
     }
   },
@@ -42,10 +42,15 @@ export default {
     },
     somaPts() {
       this.rodadas++;
-      this.jogador.pts = this.jogador.pts + this.rodadaPts;
-      this.jogador.tabela.unshift({rodada: this.rodadas, pontos: this.rodadaPts});
+
+      if(this.ptsFeitos === null) {
+        this.ptsFeitos = 0;
+      }
+
+      this.jogador.pts = this.jogador.pts + this.ptsFeitos;
+      this.jogador.tabela.unshift({rodada: this.rodadas, pontos: this.ptsFeitos});
       this.$store.dispatch('addPts', this.jogador);
-      this.rodadaPts = null;
+      this.ptsFeitos = null;
     }
   }
 }

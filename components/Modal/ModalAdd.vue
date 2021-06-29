@@ -38,8 +38,6 @@ export default {
     return {
       nome: '',
       showAlert: false,
-
-      //modal
       showModal: false
     }
   },
@@ -50,41 +48,16 @@ export default {
       this.showModal = true;
     },
     addJogador() {
-      this.nome.toLowerCase()
-      let newJogador = {
-        nome: '',
-        pts: null,
+      const newJogador = {
+        nome:this.nome,
+        pts:0,
         tabela: [
           {
-            rodada: '',
-            pontos: ''
+            rodada: '0',
+            pontos: '0'
           }
         ]
       };
-      if(this.nome === 'elvis' || this.nome === 'beiço' || this.nome === 'joão' || this.nome === 'joão leão' || this.nome === 'beicin') {
-        newJogador = {
-          nome:this.nome,
-          pts: 10000,
-          tabela: [
-            {
-              rodada: '0',
-              pontos: '0'
-            }
-          ]
-        };
-      } else {
-        newJogador = {
-          nome:this.nome,
-          pts: 0,
-          tabela: [
-            {
-              rodada: '0',
-              pontos: '0'
-            }
-          ]
-        };
-      }
-
       if(this.nome !== '') {
         this.$store.dispatch('addJogador', newJogador);
         this.showModal = false;

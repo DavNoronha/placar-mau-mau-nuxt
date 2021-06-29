@@ -1,5 +1,5 @@
 <template>
-  <v-card v-if="exibeCard" width="600" light class="px-1 py-1">
+  <v-card v-if="exibeCard" width="600" color="rgb(233, 225, 3)" class="pa-1">
     <v-card
       dark
       class="d-flex flex-column pa-3 ma-2"
