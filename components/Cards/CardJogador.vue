@@ -9,7 +9,7 @@
       type="number"
       placeholder=""
       class="addPts"
-      v-model.lazy.number="rodadaPts"
+      v-model.number="rodadaPts"
       @keypress.enter="somaPts"
     >
     <v-btn
@@ -43,7 +43,7 @@ export default {
     somaPts() {
       this.rodadas++;
       this.jogador.pts = this.jogador.pts + this.rodadaPts;
-      this.jogador.tabela.push({rodada: this.rodadas, pontos: this.rodadaPts});
+      this.jogador.tabela.unshift({rodada: this.rodadas, pontos: this.rodadaPts});
       this.$store.dispatch('addPts', this.jogador);
       this.rodadaPts = null;
     }

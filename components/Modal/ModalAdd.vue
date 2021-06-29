@@ -45,20 +45,45 @@ export default {
   },
   methods: {
     openModal() {
+      this.showAlert = false;
       this.nome = '';
       this.showModal = true;
     },
     addJogador() {
-      const newJogador = {
-        nome:this.nome,
-        pts:0,
+      this.nome.toLowerCase()
+      let newJogador = {
+        nome: '',
+        pts: null,
         tabela: [
           {
-            rodada: 0,
-            pontos: 0
+            rodada: '',
+            pontos: ''
           }
         ]
       };
+      if(this.nome === 'elvis' || this.nome === 'beiço' || this.nome === 'joão' || this.nome === 'joão leão' || this.nome === 'beicin') {
+        newJogador = {
+          nome:this.nome,
+          pts: 10000,
+          tabela: [
+            {
+              rodada: '0',
+              pontos: '0'
+            }
+          ]
+        };
+      } else {
+        newJogador = {
+          nome:this.nome,
+          pts: 0,
+          tabela: [
+            {
+              rodada: '0',
+              pontos: '0'
+            }
+          ]
+        };
+      }
 
       if(this.nome !== '') {
         this.$store.dispatch('addJogador', newJogador);

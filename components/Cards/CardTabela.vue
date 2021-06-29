@@ -1,6 +1,6 @@
 <template>
   <v-card width="50%" light class="ma-4 pa-4">
-    <v-simple-table fixed-header height="200">
+    <v-simple-table fixed-header height="200" dense>
       <template v-slot:default>
         <thead>
           <tr>
@@ -17,8 +17,8 @@
             v-for="(item, key) in jogador.tabela"
             :key="key"
           >
-            <td>{{ item.rodada }}</td>
-            <td>{{ item.pontos }}</td>
+            <td v-if="item.rodada !== '0'">{{ item.rodada }}</td>
+            <td v-if="item.pontos !== '0'">{{ item.pontos }}</td>
           </tr>
         </tbody>
       </template>
