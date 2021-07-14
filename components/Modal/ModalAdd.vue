@@ -51,12 +51,7 @@ export default {
       const newJogador = {
         nome:this.nome,
         pts:0,
-        tabela: [
-          {
-            rodada: '0',
-            pontos: '0'
-          }
-        ]
+        tabela: []
       };
       if(this.nome !== '') {
         this.$store.dispatch('addJogador', newJogador);

@@ -43,14 +43,23 @@ export default {
     somaPts() {
       this.rodadas++;
 
+      // tornando os pontos feitos em '0' para quando der enter sem preencher o ganhador
       if(this.ptsFeitos === null) {
         this.ptsFeitos = 0;
       }
 
-      this.jogador.pts = this.jogador.pts + this.ptsFeitos;
+      // fazendo tabela invertida e salvando pts da rodada
       this.jogador.tabela.unshift({rodada: this.rodadas, pontos: this.ptsFeitos});
       this.$store.dispatch('addPts', this.jogador);
       this.ptsFeitos = null;
+
+      // fazendo soma baseado na tabela de pontos.. provisório, tenho que colocar isso na store
+      let totalPts = []
+      const reducer = (a, b) => a + b;
+      for(const key in this.jogador.tabela) {
+        totalPts.push(this.jogador.tabela[key].pontos);
+      }
+      this.jogador.pts = totalPts.reduce(reducer);
     }
   }
 }

@@ -17,8 +17,8 @@
             v-for="(item, key) in jogador.tabela"
             :key="key"
           >
-            <td v-if="item.rodada !== '0'">{{ item.rodada }}</td>
-            <td v-if="item.pontos !== '0'">{{ item.pontos }}</td>
+            <td>{{ item.rodada }}</td>
+            <td>{{ item.pontos }}</td>
           </tr>
         </tbody>
       </template>
