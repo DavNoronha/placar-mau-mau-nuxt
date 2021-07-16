@@ -38,6 +38,7 @@ const createStore = () => {
         }
 
         context.commit('getJogadores', lista);
+        context.dispatch('ordena');
       },
       async addJogador(context, payload) {
         const response = await fetch(url+'.json', {
@@ -68,6 +69,7 @@ const createStore = () => {
         for(const key in payload.tabela) {
           totalPts.push(payload.tabela[key].pontos);
         }
+        console.log(totalPts)
         payload.pts = totalPts.reduce(reducer);
 
         const response = await fetch(url+'/'+payload.id+'.json', {
@@ -79,8 +81,8 @@ const createStore = () => {
 
         context.dispatch('ordena');
       },
+      // ordenando jogadores de acordo com os pontos
       ordena(context) {
-        // ordenando jogadores de acordo com os pontos
         const lista = context.state.jogadores;
         lista.sort((a, b) => {
           return (a.pts > b.pts) ? 1 : ((b.pts > a.pts) ? -1 : 0);

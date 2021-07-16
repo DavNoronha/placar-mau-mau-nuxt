@@ -5,15 +5,17 @@
       app
       class="d-flex justify-center"
     >
-      <v-container class="d-flex justify-space-between">
-        <v-avatar class="mx-16 white" rounded="50%" width="30"></v-avatar>
+      <v-container class="d-flex align-center justify-space-between">
+        <v-avatar class="mx-16 white" rounded="50%" width="30">
+          <img style="width: 100%;" src="@/assets/images/pp.png" />
+        </v-avatar>
         <v-spacer></v-spacer>
         <h1>Mau-mau CTP</h1>
+        <v-spacer></v-spacer>
+        <v-col class="pl-16">
+          <ModalAdd />
+        </v-col>
       </v-container>
-      <v-spacer></v-spacer>
-      <v-col class="pl-16">
-        <ModalAdd />
-      </v-col>
     </v-app-bar>
 
     <v-main class="d-flex justify-center align-center">
@@ -23,7 +25,7 @@
     </v-main>
 
     <v-footer
-      :absolute="!fixed"
+      :absolute="true"
       app
     >
       <span>&copy; {{ new Date().getFullYear() }}</span>
@@ -37,28 +39,5 @@ export default {
   components: {
     ModalAdd,
   },
-  data () {
-    return {
-      clipped: false,
-      drawer: false,
-      fixed: false,
-      items: [
-        {
-          icon: 'mdi-apps',
-          title: 'Welcome',
-          to: '/'
-        },
-        {
-          icon: 'mdi-chart-bubble',
-          title: 'Inspire',
-          to: '/inspire'
-        }
-      ],
-      miniVariant: false,
-      right: true,
-      rightDrawer: false,
-      title: 'Vuetify.js'
-    }
-  }
 }
 </script>
