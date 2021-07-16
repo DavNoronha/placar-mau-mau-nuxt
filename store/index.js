@@ -36,6 +36,7 @@ const createStore = () => {
           }
           lista.push(jogador);
         }
+
         context.commit('getJogadores', lista);
       },
       async addJogador(context, payload) {
@@ -48,6 +49,7 @@ const createStore = () => {
         const newJogador = {...payload, id: responseData.name};
 
         context.commit('addJogador', newJogador);
+        context.dispatch('ordena');
       },
       async excluir(context, payload) {
         const response = await fetch(`${url}/${payload}.json`, {
@@ -60,14 +62,23 @@ const createStore = () => {
       },
       // pontos
       async addPts(context, payload) {
-        const listaPts = [];
-
         const response = await fetch(url+'/'+payload.id+'.json', {
           method: 'PUT',
           body: JSON.stringify(payload)
         });
 
         const responseData = await response.json();
+
+        context.dispatch('ordena');
+      },
+      ordena(context) {
+        // ordenando jogadores de acordo com os pontos
+        const lista = context.state.jogadores;
+        lista.sort((a, b) => {
+          return (a.pts > b.pts) ? 1 : ((b.pts > a.pts) ? -1 : 0);
+        });
+
+        context.commit('getJogadores', lista);
       }
     },
     getters: {

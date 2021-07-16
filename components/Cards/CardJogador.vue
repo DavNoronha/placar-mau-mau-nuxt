@@ -4,12 +4,12 @@
       <h1>{{ jogador.nome }}</h1>
       <ModalRemove :jogador="jogador" @remover="update"/>
     </div>
-    <p>Total: {{ jogador.pts }}</p>
+    <p>Total: <strong>{{ jogador.pts }}</strong></p>
     <input
       type="number"
       placeholder=""
       class="addPts"
-      v-model.lazy.number="rodadaPts"
+      v-model.number="ptsFeitos"
       @keypress.enter="somaPts"
     >
     <v-btn
@@ -32,7 +32,7 @@ export default {
   },
   data() {
     return {
-      rodadaPts: null,
+      ptsFeitos: null,
       rodadas: this.jogador.tabela.length - 1
     }
   },
@@ -42,10 +42,24 @@ export default {
     },
     somaPts() {
       this.rodadas++;
-      this.jogador.pts = this.jogador.pts + this.rodadaPts;
-      this.jogador.tabela.push({rodada: this.rodadas, pontos: this.rodadaPts});
+
+      // tornando os pontos feitos em '0' para quando der enter sem preencher o ganhador
+      if(this.ptsFeitos === null) {
+        this.ptsFeitos = 0;
+      }
+
+      // fazendo tabela invertida e salvando pts da rodada
+      this.jogador.tabela.unshift({rodada: this.rodadas, pontos: this.ptsFeitos});
       this.$store.dispatch('addPts', this.jogador);
-      this.rodadaPts = null;
+      this.ptsFeitos = null;
+
+      // fazendo soma baseado na tabela de pontos.. provisório, tenho que colocar isso na store
+      let totalPts = []
+      const reducer = (a, b) => a + b;
+      for(const key in this.jogador.tabela) {
+        totalPts.push(this.jogador.tabela[key].pontos);
+      }
+      this.jogador.pts = totalPts.reduce(reducer);
     }
   }
 }

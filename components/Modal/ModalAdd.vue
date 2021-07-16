@@ -38,13 +38,12 @@ export default {
     return {
       nome: '',
       showAlert: false,
-
-      //modal
       showModal: false
     }
   },
   methods: {
     openModal() {
+      this.showAlert = false;
       this.nome = '';
       this.showModal = true;
     },
@@ -52,14 +51,8 @@ export default {
       const newJogador = {
         nome:this.nome,
         pts:0,
-        tabela: [
-          {
-            rodada: 0,
-            pontos: 0
-          }
-        ]
+        tabela: []
       };
-
       if(this.nome !== '') {
         this.$store.dispatch('addJogador', newJogador);
         this.showModal = false;

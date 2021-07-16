@@ -12,14 +12,6 @@ import ExibeLista from '@/components/Jogadores/ExibeLista.vue';
 export default {
   components: {
     ExibeLista,
-  },
-  data() {
-    return {
-
-    }
-  },
-  methods: {
-
   }
 }
 </script>
