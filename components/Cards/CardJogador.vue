@@ -54,12 +54,12 @@ export default {
       this.ptsFeitos = null;
 
       // fazendo soma baseado na tabela de pontos.. provisório, tenho que colocar isso na store
-      let totalPts = []
-      const reducer = (a, b) => a + b;
-      for(const key in this.jogador.tabela) {
-        totalPts.push(this.jogador.tabela[key].pontos);
-      }
-      this.jogador.pts = totalPts.reduce(reducer);
+      // let totalPts = []
+      // const reducer = (a, b) => a + b;
+      // for(const key in this.jogador.tabela) {
+      //   totalPts.push(this.jogador.tabela[key].pontos);
+      // }
+      // this.jogador.pts = totalPts.reduce(reducer);
     }
   }
 }

@@ -62,6 +62,14 @@ const createStore = () => {
       },
       // pontos
       async addPts(context, payload) {
+        // fazendo soma baseado na tabela de pontos
+        let totalPts = []
+        const reducer = (a, b) => a + b;
+        for(const key in payload.tabela) {
+          totalPts.push(payload.tabela[key].pontos);
+        }
+        payload.pts = totalPts.reduce(reducer);
+
         const response = await fetch(url+'/'+payload.id+'.json', {
           method: 'PUT',
           body: JSON.stringify(payload)
