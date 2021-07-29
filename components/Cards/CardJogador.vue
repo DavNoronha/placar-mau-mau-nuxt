@@ -2,7 +2,7 @@
   <v-col class="d-flex flex-column justify-center align-center">
     <div class="nome">
       <h1>{{ jogador.nome }}</h1>
-      <ModalRemove :jogador="jogador" @remover="update"/>
+      <ModalRemove :jogador="jogador" @remover="apagaJogador($event)"/>
     </div>
     <p>Total: <strong>{{ jogador.pts }}</strong></p>
     <input
@@ -26,7 +26,12 @@
 import ModalRemove from '@/components/Modal/ModalRemove.vue';
 
 export default {
-  props: ['jogador', 'index'],
+  props: {
+    jogador: {
+      type: Object,
+      default: () =>  {return {}}
+    }
+  },
   components: {
     ModalRemove
   },
@@ -52,14 +57,10 @@ export default {
       this.jogador.tabela.unshift({rodada: this.rodadas, pontos: this.ptsFeitos});
       this.$store.dispatch('addPts', this.jogador);
       this.ptsFeitos = null;
-
-      // fazendo soma baseado na tabela de pontos.. provisório, tenho que colocar isso na store
-      // let totalPts = []
-      // const reducer = (a, b) => a + b;
-      // for(const key in this.jogador.tabela) {
-      //   totalPts.push(this.jogador.tabela[key].pontos);
-      // }
-      // this.jogador.pts = totalPts.reduce(reducer);
+    },
+    async apagaJogador(id) {
+      await this.$store.dispatch('excluir', id);
+      this.update();
     }
   }
 }

@@ -24,17 +24,21 @@
 
 <script>
 export default {
-  props: ['jogador'],
+  props: {
+    jogador: {
+      type: Object,
+      default: () =>  {return {}}
+    }
+  },
   data() {
     return {
       showModal: false
     }
   },
   methods: {
-    async excluir(id) {
-      await this.$store.dispatch('excluir', id);
+    excluir(id) {
       this.showModal = false;
-      this.$emit('remover');
+      this.$emit('remover', id);
     },
     openModal() {
       this.showModal = !this.showModal;

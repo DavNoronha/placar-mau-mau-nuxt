@@ -8,7 +8,6 @@
     >
       <v-row class="d-flex">
         <CardJogador
-          :index="jogador.id"
           :jogador="jogador"
           @update="exibeLista"
         />

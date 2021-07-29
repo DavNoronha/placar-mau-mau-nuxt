@@ -17,7 +17,7 @@ const createStore = () => {
       excluir(state, payload) {
         const res = state.jogadores.filter(j => j.id !== payload);
         state.jogadores = res;
-      },
+      }
     },
     actions: {
       async getJogadores(context) {
@@ -61,6 +61,21 @@ const createStore = () => {
 
         context.commit('excluir', payload);
       },
+      // exclui rodada de pontos de algum jogador (não sei como funcionou.. acho que foi milagre)
+      async excluirRodada(context, payload) {
+        const jogador = payload.jogador;
+        const idx = payload.index;
+
+        jogador.tabela.splice(idx,1);
+
+        const response = await fetch(`https://mau-mau-a91e9-default-rtdb.firebaseio.com/jogadores/${jogador.id}.json`, {
+          method: 'PATCH',
+          body: JSON.stringify(jogador)
+        });
+
+        const responseData = await response.json();
+        context.dispatch('addPts', jogador)
+      },
       // pontos
       async addPts(context, payload) {
         // fazendo soma baseado na tabela de pontos
@@ -69,7 +84,7 @@ const createStore = () => {
         for(const key in payload.tabela) {
           totalPts.push(payload.tabela[key].pontos);
         }
-        console.log(totalPts)
+        // console.log(totalPts)
         payload.pts = totalPts.reduce(reducer);
 
         const response = await fetch(url+'/'+payload.id+'.json', {
@@ -87,7 +102,7 @@ const createStore = () => {
         lista.sort((a, b) => {
           return (a.pts > b.pts) ? 1 : ((b.pts > a.pts) ? -1 : 0);
         });
-
+        // console.log('tei')
         context.commit('getJogadores', lista);
       }
     },
