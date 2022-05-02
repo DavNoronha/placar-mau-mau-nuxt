@@ -1,35 +1,41 @@
 <template>
-  <v-col class="d-flex justify-center align-center">
-    <v-btn
-      large
-      @click="openModal"
-      class="primary"
-    >
-      Adicionar Jogador
-    </v-btn>
-    <v-dialog max-width="400" v-model="showModal">
-      <v-card light class="d-flex flex-column align-center pa-5">
-        <v-card-title><h2>Quem vai jogar?</h2></v-card-title>
-        <v-text-field
-          autofocus
-          id="nome"
-          label="Nome"
-          color="#888"
-          v-model="nome"
-          @keypress.enter="addJogador"
-        ></v-text-field>
-        <p v-if="showAlert" class="red--text">Insira um nome porra!</p>
-        <v-btn
-          large
-          color="success"
-          class="black--text"
-          @click="addJogador"
-        >
-          Adicionar
-        </v-btn>
-      </v-card>
-    </v-dialog>
-  </v-col>
+  <v-row>
+    <v-col class="d-flex justify-center align-center">
+      <v-btn
+        large
+        @click="openModal"
+        class="primary"
+      >
+        Adicionar Jogador
+      </v-btn>
+
+      <v-dialog max-width="400" v-model="abrirModal">
+        <v-card light class="d-flex flex-column align-center pa-5">
+          <v-card-title><h2>Quem vai jogar?</h2></v-card-title>
+
+          <v-text-field
+            autofocus
+            id="nome"
+            label="Nome"
+            color="#888"
+            v-model="nome"
+            @keypress.enter="addJogador()"
+          />
+
+          <p v-if="mostraAlerta" class="red--text">Insira um nome!</p>
+
+          <v-btn
+            large
+            color="success"
+            class="black--text"
+            @click="addJogador()"
+          >
+            Adicionar
+          </v-btn>
+        </v-card>
+      </v-dialog>
+    </v-col>
+  </v-row>
 </template>
 
 <script>
@@ -37,36 +43,38 @@ export default {
   data() {
     return {
       nome: '',
-      showAlert: false,
-      showModal: false
+      mostraAlerta: false,
+      abrirModal: false
     }
   },
   methods: {
     openModal() {
-      this.showAlert = false;
+      this.mostraAlerta = false;
       this.nome = '';
-      this.showModal = true;
+      this.abrirModal = true;
     },
     addJogador() {
       const newJogador = {
-        nome:this.nome,
-        pts:0,
-        tabela: [
-          {rodada: -1, pontos: 0}
+        name:this.nome,
+        points:0,
+        rounds: [
+          {round: -1, points: 0}
         ]
       };
+
       if(this.nome !== '') {
         this.$store.dispatch('addJogador', newJogador);
-        this.showModal = false;
-      } else {
-        this.showAlert = true;
+        this.abrirModal = false;
+        return 
       }
+      
+      this.mostraAlerta = true;
     }
   },
   watch: {
     nome() {
       if(this.nome !== '') {
-        this.showAlert = false;
+        this.mostraAlerta = false;
       }
     }
   }

@@ -1,21 +1,24 @@
 <template>
   <v-col class="d-flex flex-column justify-center align-center">
     <div class="nome">
-      <h1>{{ jogador.nome }}</h1>
+      <h1>{{ jogador.name }}</h1>
       <ModalRemove :jogador="jogador" @remover="apagaJogador($event)"/>
     </div>
-    <p>Total: <strong>{{ jogador.pts }}</strong></p>
+
+    <p>Total: <strong>{{ jogador.points }}</strong></p>
+
     <input
       type="number"
       placeholder=""
       class="addPts"
       v-model.number="ptsFeitos"
-      @keypress.enter="somaPts"
+      @keypress.enter="somaPts()"
     >
+
     <v-btn
       rounded
       class="mt-3 success black--text"
-      @click="somaPts"
+      @click="somaPts()"
     >
       <v-icon>mdi-plus</v-icon>
     </v-btn>
@@ -38,29 +41,30 @@ export default {
   data() {
     return {
       ptsFeitos: null,
-      rodadas: this.jogador.tabela.length - 1
+    }
+  },
+  computed: {
+    rodadas() {
+      return this.jogador.rounds.length
     }
   },
   methods: {
-    update() {
-      this.$emit('update');
-    },
     somaPts() {
+      console.log(this.jogador)
       this.rodadas++;
 
       // tornando os pontos feitos em '0' para quando der enter sem preencher o ganhador
-      if(this.ptsFeitos === null) {
-        this.ptsFeitos = 0;
-      }
+      if(this.ptsFeitos === null) this.ptsFeitos = 0;
 
-      // fazendo tabela invertida e salvando pts da rodada
-      this.jogador.tabela.unshift({rodada: this.rodadas, pontos: this.ptsFeitos});
-      this.$store.dispatch('addPts', this.jogador);
+      this.$store.dispatch(
+        'addPts', 
+        {
+          jogador: this.jogador,
+          ptsRodada: {round: this.rodadas, points: this.ptsFeitos}
+        }
+      );
+
       this.ptsFeitos = null;
-    },
-    async apagaJogador(id) {
-      await this.$store.dispatch('excluir', id);
-      this.update();
     }
   }
 }

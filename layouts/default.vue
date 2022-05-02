@@ -6,14 +6,29 @@
       class="d-flex justify-center"
     >
       <v-container class="d-flex align-center justify-space-between">
-        <v-avatar class="mx-16 white" rounded="50%" width="30">
+        <v-avatar 
+          class="mx-16 white" 
+          rounded="50%" 
+          width="30"
+          style="cursor: pointer"
+          @click="voltarInicio()"
+        >
           <img style="width: 100%;" src="@/assets/images/pp.png" />
         </v-avatar>
+
         <v-spacer></v-spacer>
-        <h1>Mau-mau CTP</h1>
+
+        <h1 
+          style="cursor: pointer"
+          @click="voltarInicio()" 
+        >
+          Mau-mau CTP
+        </h1>
+
         <v-spacer></v-spacer>
+
         <v-col class="pl-16">
-          <ModalAdd />
+          <ModalAdd v-if="!isIndex"/>
         </v-col>
       </v-container>
     </v-app-bar>
@@ -35,9 +50,20 @@
 
 <script>
 import ModalAdd from '@/components/Modal/ModalAdd.vue';
+
 export default {
   components: {
-    ModalAdd,
+    ModalAdd
   },
+  computed: {
+    isIndex() {
+      return this.$route.name == 'index'
+    }
+  },
+  methods: {
+    voltarInicio() {
+      this.$router.push('/')
+    }
+  }
 }
 </script>

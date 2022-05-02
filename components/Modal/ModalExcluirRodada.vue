@@ -13,7 +13,7 @@
     <v-dialog width="400" v-model="abrirModal">
       <v-card color="rgb(233, 225, 3)" height="200" class="py-3 d-flex flex-column">
         <v-card-title class="black--text">
-          <h2>Deseja remover {{ jogador.name }}?</h2>
+          <h2>Deseja remover a {{idxRodada}}° rodada de {{ jogador.name }}?</h2>
         </v-card-title>
 
         <v-spacer></v-spacer>
@@ -30,7 +30,7 @@
           <v-btn 
             color="red" 
             large 
-            @click="excluirJogador(jogador._id)"
+            @click="excluirRodada(jogador._id)"
           >
             Deletar
           </v-btn>
@@ -46,6 +46,10 @@ export default {
     jogador: {
       type: Object,
       default: () => ({})
+    },
+    idxRodada: {
+      type: Number,
+      default: null
     }
   },
   data() {
@@ -54,9 +58,9 @@ export default {
     }
   },
   methods: {
-    async excluirJogador(id) {
+    async excluirRodada(id) {
       this.abrirModal = false;
-      await this.$store.dispatch('excluirJogador', id);
+      this.$store.dispatch('excluirRodada', {jogador: this.jogador, idxRodada: this.idxRodada})
     },
     openModal() {
       this.abrirModal = !this.abrirModal;

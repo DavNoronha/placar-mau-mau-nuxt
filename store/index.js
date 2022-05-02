@@ -1,117 +1,131 @@
-import Vuex from 'vuex';
+const url = 'http://localhost:4000';
 
-const url = 'https://mau-mau-a91e9-default-rtdb.firebaseio.com/jogadores';
+export const state = () => ({
+  jogadores: []
+})
 
-const createStore = () => {
-  return new Vuex.Store({
-    state: {
-      jogadores: []
-    },
-    mutations: {
-      getJogadores(state, payload) {
-        state.jogadores = payload;
-      },
-      addJogador(state,payload) {
-        state.jogadores.push(payload);
-      },
-      excluir(state, payload) {
-        const res = state.jogadores.filter(j => j.id !== payload);
-        state.jogadores = res;
-      }
-    },
-    actions: {
-      async getJogadores(context) {
-        const lista = []
+export const mutations = {
+  listaJogadores(state, payload) {
+    payload.sort((a, b) => {
+      return (a.points > b.points) ? 1 : ((b.points > a.points) ? -1 : 0);
+    });
 
-        const response = await fetch(url+'.json');
+    state.jogadores = payload;
+  },
+  addJogador(state,payload) {
+    state.jogadores.push(payload);
+  },
+  addPts(state, {jogador, ptsRodada}) {
+    // fazendo tabela invertida e salvando pts da rodada
+    let aux = state.jogadores.find(item => item._id == jogador._id)
 
-        const responseData = await response.json()
+    aux.rounds.unshift(ptsRodada)
+  },
+  atualizaPontos(state, {jogador, idxPontos, novosPts}) {
+    let idxJogador = state.jogadores.findIndex(item => item._id == jogador._id)
 
-        for(const key in responseData) {
-          const jogador = {
-            id: key,
-            nome: responseData[key].nome,
-            pts: responseData[key].pts,
-            tabela: responseData[key].tabela
-          }
-          lista.push(jogador);
-        }
+    state.jogadores[idxJogador].rounds[idxPontos].points = novosPts;
+  },
+  somaPts(state, jogador) {
+    let aux = state.jogadores.find(item => item._id == jogador._id)
+    // fazendo soma baseado na tabela de pontos
+    let totalPts = []
+    const reducer = (a, b) => a + b;
 
-        context.commit('getJogadores', lista);
-        context.dispatch('ordena');
-      },
-      async addJogador(context, payload) {
-        const response = await fetch(url+'.json', {
-          method: 'POST',
-          body: JSON.stringify(payload)
-        });
-        const responseData = await response.json();
+    aux.rounds.forEach(round => totalPts.push(round.points))
+    
+    aux.points = totalPts.reduce(reducer);
+  },
+  excluirJogador(state, payload) {
+    let idx = state.jogadores.findIndex(item => item._id == payload)
 
-        const newJogador = {...payload, id: responseData.name};
+    state.jogadores.splice(idx, 1)
+  },
 
-        context.commit('addJogador', newJogador);
-        context.dispatch('ordena');
-      },
-      async excluir(context, payload) {
-        const response = await fetch(`${url}/${payload}.json`, {
-          method: 'DELETE',
-        });
+  //não funciona bem a funcionalidade abaixo (não está em uso)
+  excluirRodada(state, {jogador, idxRodada}) {
+    const aux = state.jogadores.find(item => item._id == jogador._id)
 
-        const responseData = await response.json();
-
-        context.commit('excluir', payload);
-      },
-      // exclui rodada de pontos de algum jogador (não sei como funcionou.. acho que foi milagre)
-      async excluirRodada(context, payload) {
-        const jogador = payload.jogador;
-        const idx = payload.index;
-
-        jogador.tabela.splice(idx,1);
-
-        const response = await fetch(`https://mau-mau-a91e9-default-rtdb.firebaseio.com/jogadores/${jogador.id}.json`, {
-          method: 'PATCH',
-          body: JSON.stringify(jogador)
-        });
-
-        const responseData = await response.json();
-        context.dispatch('addPts', jogador)
-      },
-      // pontos
-      async addPts(context, payload) {
-        // fazendo soma baseado na tabela de pontos
-        let totalPts = []
-        const reducer = (a, b) => a + b;
-        for(const key in payload.tabela) {
-          totalPts.push(payload.tabela[key].pontos);
-        }
-        // console.log(totalPts)
-        payload.pts = totalPts.reduce(reducer);
-
-        const response = await fetch(url+'/'+payload.id+'.json', {
-          method: 'PUT',
-          body: JSON.stringify(payload)
-        });
-
-        const responseData = await response.json();
-
-        context.dispatch('ordena');
-      },
-      // ordenando jogadores de acordo com os pontos
-      ordena(context) {
-        const lista = context.state.jogadores;
-        lista.sort((a, b) => {
-          return (a.pts > b.pts) ? 1 : ((b.pts > a.pts) ? -1 : 0);
-        });
-        // console.log('tei')
-        context.commit('getJogadores', lista);
-      }
-    },
-    getters: {
-      listaJogadores(state) {
-        return state.jogadores;
-      }
-    }
-  })
+    aux.rounds.splice(idxRodada, 1)
+  }
 }
 
-export default createStore;
+export const actions = {
+  async listaJogadores(context) {
+    try {
+      const {data} = await this.$axios.$get(url+'/players')
+
+      context.commit('listaJogadores', data);      
+    } catch({message}) {
+      console.log('GET JOGADORES ERRO: ', message)
+    }
+  },
+
+  async addJogador(context, payload) {
+    try {
+      const {data} = await this.$axios.$post(url+'/players', payload)
+
+      context.commit('addJogador', data);
+    } catch({message}) {
+      console.log('ADD JOGADOR ERRO: ', message)
+    }
+  },
+
+  async excluirJogador(context, payload) {
+    try {
+      await this.$axios.$delete(url+`/players/${payload}`)
+
+      context.commit('excluirJogador', payload);
+    } catch({message}) {
+      console.log('EXCLUIR JOGADOR ERRO: ', message)
+    }
+  },
+  // pontos
+  async addPts(context, {jogador, ptsRodada}) {
+    context.commit('addPts', {jogador, ptsRodada})
+    context.commit('somaPts', jogador)
+
+    let aux = context.state.jogadores.find(item => item._id == jogador._id)
+
+    try {
+      await this.$axios.$put(url+`/players/${jogador._id}`, aux)
+
+      context.dispatch('listaJogadores')
+    } catch({message}) {
+      console.log('ADD PONTOS ERRO: ', message)
+    }
+  },
+  async atualizaPontos(context, {jogador, idxPontos, novosPts}) {
+    context.commit('atualizaPontos', {jogador, idxPontos, novosPts})
+    context.commit('somaPts', jogador)
+
+    let aux = context.state.jogadores.find(item => item._id == jogador._id)
+
+    try {
+      await this.$axios.$put(url+`/players/${jogador._id}`, aux)
+
+      context.dispatch('listaJogadores')
+    } catch({message}) {
+      console.log('ATUALIZA PONTOS ERRO: ', message)
+    }
+  },
+
+  // exclui rodada de pontos de algum jogador (não funciona muito bem, implementação comentada)
+  async excluirRodada(context, {jogador, idxRodada}) {
+    context.commit('excluirRodada', {jogador, idxRodada})
+
+    let aux = context.state.jogadores.find(item => item._id == jogador._id)
+
+    try {
+      await this.$axios.$put(url+`/players/${jogador._id}`, aux)
+    } catch({message}) {
+      console.log('EXCLUIR RODADA ERRO: ', message)
+    }
+  }  
+}
+
+export const getters = {
+  listaJogadores(state) {
+    return state.jogadores;
+  }
+}

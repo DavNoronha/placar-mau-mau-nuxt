@@ -12,22 +12,37 @@
             </th>
           </tr>
         </thead>
+
         <tbody>
           <tr
-            v-for="(item, key) in jogador.tabela"
+            v-for="(item, key) in jogador.rounds"
             :key="key"
           >
-            <td v-if="item.rodada !== -1">{{ item.rodada }}</td>
-            <td class="d-flex align-center justify-space-between" v-if="item.rodada !== -1">
+            <td 
+              v-if="item.round !== -1"
+              style="width: 50%"
+            >
+              {{ item.round }}
+            </td>
+
+            <td
+              v-if="item.round !== -1"
+              class="d-flex align-center justify-center" 
+            >
               <v-text-field
                 class="d-flex align-center mt-5 input"
                 height="10"
                 rounded
                 dense
-                v-model.number="item.pontos"
-                @change="atualiza($event, key)"
-              ></v-text-field>
-              <ModalRemove @remover="apagaRodada(key)"/>
+                v-bind:value="+item.points"
+                @change="atualizaPontos(+$event, key)"
+              />
+
+              <!-- Funcionalidade de excluir rodada ainda com problemas -->
+              <!-- <ModalExcluirRodada
+                :jogador="jogador"
+                :idxRodada="item.round"
+              /> -->
             </td>
           </tr>
         </tbody>
@@ -37,7 +52,7 @@
 </template>
 
 <script>
-import ModalRemove from '@/components/Modal/ModalRemove.vue';
+import ModalExcluirRodada from '@/components/Modal/ModalExcluirRodada.vue';
 
 export default {
   props: {
@@ -47,23 +62,19 @@ export default {
     }
   },
   components: {
-    ModalRemove
+    ModalExcluirRodada
   },
   methods: {
     //metodo para editar pontos na tabela, precisa ser refatorado na store
-    async atualiza(novoPts, idx) {
-      const response = await fetch(`https://mau-mau-a91e9-default-rtdb.firebaseio.com/jogadores/${this.jogador.id}/tabela/${idx}/pontos.json`, {
-        method: 'PUT',
-        body: JSON.stringify(novoPts === '' ? 0 : novoPts)
-      })
-
-      const responseData = await response.json()
-
-      this.jogador.tabela[idx].pontos = responseData
-      this.$store.dispatch('addPts', this.jogador);
-    },
-    apagaRodada(idx) {
-      this.$store.dispatch('excluirRodada', {jogador: this.jogador, index: idx})
+    async atualizaPontos(novosPts, idxPts) {
+      this.$store.dispatch(
+        'atualizaPontos',
+        {
+          jogador: this.jogador, 
+          idxPontos: idxPts, 
+          novosPts: novosPts === '' ? 0 : novosPts
+        }
+      )
     }
   }
 }

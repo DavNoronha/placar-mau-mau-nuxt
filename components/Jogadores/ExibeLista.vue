@@ -7,10 +7,8 @@
       :key="jogador.id"
     >
       <v-row class="d-flex">
-        <CardJogador
-          :jogador="jogador"
-          @update="exibeLista"
-        />
+        <CardJogador :jogador="jogador" />
+        
         <CardTabela :jogador="jogador" />
       </v-row>
     </v-card>
@@ -28,21 +26,23 @@ export default {
   },
   data() {
     return {
-      jogadores: []
+      // jogadores: []
     }
   },
-  created() {
-    this.exibeLista();
-  },
   computed: {
+    jogadores() {
+      return this.$store.getters['listaJogadores']
+    },
     exibeCard() {
       return (this.jogadores.length === 0) ? false : true
     },
   },
+  created() {
+    this.exibeLista();
+  },
   methods: {
     async exibeLista() {
-      await this.$store.dispatch('getJogadores');
-      this.jogadores = this.$store.getters['listaJogadores'];
+      await this.$store.dispatch('listaJogadores');
     }
   }
 }
